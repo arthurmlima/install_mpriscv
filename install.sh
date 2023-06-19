@@ -46,6 +46,20 @@ sudo ufw reload
 
 
 
+
+
+
+
+
+
+cd Avnet20201;
+git clone https://github.com/Avnet/petalinux.git -b 2020.1;
+git clone https://github.com/Avnet/hdl.git -b 2020.1;
+git clone https://github.com/Avnet/bdf.git -b master;
+
+
+
+
 #setup network connection
 
 #clone app-cana

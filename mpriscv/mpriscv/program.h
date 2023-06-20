@@ -1,93 +1,5 @@
-#ifndef PROGRAM_H
-#define PROGRAM_H
-
 #include<stdint.h> 
-
-#include "images/conf_002.hpp"
-#include "images/conf_004.hpp"
-#include "images/conf_008.hpp"
-#include "images/conf_009.hpp"
-#include "images/conf_010.hpp"
-#include "images/conf_012.hpp"
-#include "images/conf_013.hpp"
-#include "images/conf_014.hpp"
-#include "images/conf_017.hpp"
-#include "images/conf_020.hpp"
-#include "images/conf_029.hpp"
-#include "images/conf_030.hpp"
-#include "images/conf_032.hpp"
-#include "images/conf_037.hpp"
-#include "images/conf_038.hpp"
-#include "images/conf_041.hpp"
-#include "images/conf_053.hpp"
-#include "images/conf_054.hpp"
-#include "images/conf_060.hpp"
-#include "images/conf_061.hpp"
-#include "images/conf_062.hpp"
-#include "images/conf_063.hpp"
-#include "images/conf_064.hpp"
-#include "images/conf_065.hpp"
-#include "images/conf_066.hpp"
-#include "images/conf_067.hpp"
-#include "images/conf_068.hpp"
-#include "images/conf_069.hpp"
-#include "images/conf_070.hpp"
-#include "images/conf_071.hpp"
-#include "images/conf_072.hpp"
-#include "images/conf_073.hpp"
-#include "images/conf_074.hpp"
-#include "images/conf_075.hpp"
-#include "images/conf_081.hpp"
-#include "images/conf_082.hpp"
-#include "images/conf_083.hpp"
-#include "images/conf_084.hpp"
-#include "images/conf_085.hpp"
-#include "images/conf_086.hpp"
-
-uint8_t *conf[] = {
-      CONF_002,
-      CONF_004,
-      CONF_008,
-      CONF_009,
-      CONF_010,
-      CONF_012,
-      CONF_013,
-      CONF_014,
-      CONF_017,
-      CONF_020,
-      CONF_029,
-      CONF_030,
-      CONF_032,
-      CONF_037,
-      CONF_038,
-      CONF_041,
-      CONF_053,
-      CONF_054,
-      CONF_060,
-      CONF_061,
-      CONF_062,
-      CONF_063,
-      CONF_064,
-      CONF_065,
-      CONF_066,
-      CONF_067,
-      CONF_068,
-      CONF_069,
-      CONF_070,
-      CONF_071,
-      CONF_072,
-      CONF_073,
-      CONF_074,
-      CONF_075,
-      CONF_081,
-      CONF_082,
-      CONF_083,
-      CONF_084,
-      CONF_085,
-      CONF_086,
-};
-
- uint32_t addrs[1708]=
+ uint32_t addrs[1693]=
 {
 0x00000000,
 0x00000001,
@@ -1781,27 +1693,12 @@ uint8_t *conf[] = {
 0x00000699,
 0x0000069a,
 0x0000069b,
-0x0000069c,
-0x0000069d,
-0x0000069e,
-0x0000069f,
-0x000006a0,
-0x000006a1,
-0x000006a2,
-0x000006a3,
-0x000006a4,
-0x000006a5,
-0x000006a6,
-0x000006a7,
-0x000006a8,
-0x000006a9,
-0x000006aa,
-0x000006ab
+0x0000069c
 
 };
 
 
-uint32_t program[1708]=
+uint32_t program[1693]=
 {
 0xff010113,
 0x00112623,
@@ -1811,25 +1708,9 @@ uint32_t program[1708]=
 0x00478793,
 0x36400713,
 0x00e7a023,
-0x12c000ef,
-0x048000ef,
+0x0ec000ef,
+0x008000ef,
 0x0000006f,
-0xff010113,
-0x00112623,
-0x00812423,
-0x01010413,
-0x000317b7,
-0xd4078513,
-0x4ac010ef,
-0x0223f7b7,
-0x00f00713,
-0x00e7a023,
-0x000317b7,
-0xd4078513,
-0x494010ef,
-0x0223f7b7,
-0x0007a023,
-0xfd5ff06f,
 0xfe010113,
 0x00112e23,
 0x00812c23,
@@ -1843,10 +1724,10 @@ uint32_t program[1708]=
 0xfec42703,
 0x024004b7,
 0x00000693,
-0x00200613,
+0x00100613,
 0x00070593,
 0x00078513,
-0x48c010ef,
+0x490010ef,
 0x00050793,
 0x00f4a023,
 0x024007b7,
@@ -1894,28 +1775,22 @@ uint32_t program[1708]=
 0x01878793,
 0x0007a703,
 0x00100793,
-0x04f71463,
+0x02f71c63,
 0x023107b7,
 0x01c78793,
 0x0007a703,
 0x00100793,
-0x00f71e63,
-0x711000ef,
-0x668010ef,
-0x0b4000ef,
-0x428010ef,
-0x0ac000ef,
-0x0300006f,
-0x198010ef,
-0x650010ef,
-0x038000ef,
-0x410010ef,
-0x030000ef,
-0x0180006f,
-0x180010ef,
-0x638010ef,
-0x020000ef,
-0x3f8010ef,
+0x00f71a63,
+0x6f9000ef,
+0x66c010ef,
+0x09c000ef,
+0x0200006f,
+0x188010ef,
+0x65c010ef,
+0x028000ef,
+0x0100006f,
+0x178010ef,
+0x64c010ef,
 0x018000ef,
 0x00000013,
 0x00c12083,
@@ -3147,15 +3022,22 @@ uint32_t program[1708]=
 0x02812623,
 0x03010413,
 0xfca42e23,
-0xfe042623,
-0x0140006f,
+0xfe041723,
+0x0240006f,
 0x00000013,
-0xfec42783,
+0xfee45783,
+0x01079793,
+0x0107d793,
 0x00178793,
-0xfef42623,
-0xfec42783,
-0xfdc42703,
-0xfee7e4e3,
+0x01079793,
+0x0107d793,
+0xfef41723,
+0xfee45783,
+0x01079793,
+0x0107d793,
+0x00078713,
+0xfdc42783,
+0xfcf766e3,
 0x00000013,
 0x00000013,
 0x02c12403,
@@ -3183,8 +3065,8 @@ uint32_t program[1708]=
 0xfe842603,
 0xfec42583,
 0x00000513,
-0xf95fe0ef,
-0xb8cff0ef,
+0xf79fe0ef,
+0xb70ff0ef,
 0x000067b7,
 0x10078793,
 0x0007a783,
@@ -3250,7 +3132,7 @@ uint32_t program[1708]=
 0xfd842783,
 0x00278613,
 0x000027b7,
-0xa2878693,
+0x9ec78693,
 0x00070793,
 0x00279793,
 0x00e787b3,
@@ -3295,7 +3177,7 @@ uint32_t program[1708]=
 0x00000713,
 0x00200693,
 0x00078513,
-0xb6dfe0ef,
+0xb51fe0ef,
 0xfe842783,
 0x00178793,
 0xfef42423,
@@ -3392,7 +3274,7 @@ uint32_t program[1708]=
 0xfd842783,
 0x00178613,
 0x000027b7,
-0xa8c78693,
+0xa5078693,
 0x00070793,
 0x00179793,
 0x00e787b3,
@@ -3437,7 +3319,7 @@ uint32_t program[1708]=
 0x00000713,
 0x00100693,
 0x00078513,
-0x935fe0ef,
+0x919fe0ef,
 0xfe842783,
 0x00178793,
 0xfef42423,
@@ -3513,5 +3395,3 @@ uint32_t program[1708]=
 0x00000001
 
 };
-
-#endif

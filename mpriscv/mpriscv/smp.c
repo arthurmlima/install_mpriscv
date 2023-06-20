@@ -24,6 +24,7 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include "program.h"
+#include "Images_array.h"
 #include <time.h>
 
 #define TILE_0_0 0x400000000
@@ -81,7 +82,7 @@ typedef struct
 	}ImageInitTransfer_struct;
 
 void prog_riscv(Vis_AxiStruct* p);
-void transfer_image(ImageInitTransfer_struct *p,uint32_t pixel,uint32_t x_dest,uint32_t y_dest, float *t_primeiro_ma, float *t_ultimo_ma);
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, float *t_primeiro_ma, float *t_ultimo_ma);
 uint8_t* recv_pixel(ImageInitRecv_struct *p,float *t_primeiro_am, float *t_ultimo_am);
 
 uint8_t mlena1[240][240];
@@ -91,6 +92,11 @@ uint8_t ml2[240*240];
 uint8_t* mpriscv(int sel_img, float *t0, float *t1, float *t2, float *t3,float *t4,float *t5) {
   	
 	*t0= 1.73;
+	*t1= 1.73;
+	*t2= 1.73;
+	*t3= 1.73;
+	*t4= 1.73;
+	*t5= 1.73;
 	unsigned 	page_addr;
 	unsigned	page_offset;
 	unsigned 	page_size = sysconf(_SC_PAGESIZE);
@@ -158,30 +164,30 @@ uint8_t* mpriscv(int sel_img, float *t0, float *t1, float *t2, float *t3,float *
 
 
 
-	transfer_image(Transfer,conf[sel_img][j+240*i],j,i);
+	transfer_image(Transfer,conf,sel_img,t0,t1);
 
 
-      return recv_pixel(Receiv);
+      return recv_pixel(Receiv,t2,t3);
 }
 
-void transfer_image(ImageInitTransfer_struct *p, uint32_t pixel, uint32_t x_dest, uint32_t y_dest, float *t_primeiro_ma, float *t_ultimo_ma)
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, float *t_primeiro_ma, float *t_ultimo_ma)
 {
 	  for (volatile uint32_t i = 0; i < 240; i++)
 	  {
 		  for (volatile uint32_t j = 0; j < 240; j++)
 		  {
-			  if (i = 240 &&j = 240)
+			  if (i == 240 && j == 240)
 			  {
-				  *t_primeiro_ma = p->T_PRIMEIRO_MA;
+				  //*t_primeiro_ma = p->T_PRIMEIRO_MA;
 			  }
-			  else if (i = 0 &&j = 0)
+			  else if (i == 0 && j == 0)
 			  {
-				  *t_ultimo_ma = p->T_ULTIMO_MA;
+				  //*t_ultimo_ma = p->T_ULTIMO_MA;
 			  }
 			  // primeiro eu seto os valores
-			  p->PIXEL = pixel;
-			  p->X_DEST = x_dest;
-			  p->Y_DEST = y_dest;
+			  p->PIXEL = conf[sel_img][j+240*i];
+			  p->X_DEST = j;
+			  p->Y_DEST = i;
 			  for (volatile int x = 0; x < 20000; x++)
 				  ;
 
@@ -206,13 +212,13 @@ uint8_t *recv_pixel(ImageInitRecv_struct *p, float *t_primeiro_am, float *t_ulti
 	  {
 		  for (volatile uint32_t j = 0; j < 240; j++)
 		  {
-			  if (i = 240 &&j = 240)
+			  if (i == 240 && j == 240)
 			  {
-				  *t_primeiro_am = p->T_PRIMEIRO_MA;
+				  //*t_primeiro_am = p->T_PRIMEIRO_MA;
 			  }
-			  else if (i = 0 &&j = 0)
+			  else if (i == 0 && j == 0)
 			  {
-				  *t_ultimo_am = p->T_ULTIMO_MA;
+				  //*t_ultimo_am = p->T_ULTIMO_MA;
 			  }
 			  while (p->REQ == 0)
 				  ;

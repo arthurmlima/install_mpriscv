@@ -8,13 +8,13 @@ my_lib = ctypes.CDLL("./mpriscv/mpriscv.so")
 
 # Define the argument types
 my_lib.mpriscv.argtypes = [
-    ctypes.c_int,              # sel_img
-    ctypes.POINTER(ctypes.c_float),  # t0
-    ctypes.POINTER(ctypes.c_float),  # t1
-    ctypes.POINTER(ctypes.c_float),  # t2
-    ctypes.POINTER(ctypes.c_float),  # t3
-    ctypes.POINTER(ctypes.c_float),  # t4
-    ctypes.POINTER(ctypes.c_float)   # t5
+    ctypes.c_int,                 # sel_img
+    ctypes.POINTER(ctypes.c_double),  # t0
+    ctypes.POINTER(ctypes.c_double),  # t1
+    ctypes.POINTER(ctypes.c_double),  # t2
+    ctypes.POINTER(ctypes.c_double),  # t3
+    ctypes.POINTER(ctypes.c_double),  # t4
+    ctypes.POINTER(ctypes.c_double)   # t5
 ]
 
 # Define the return type
@@ -22,13 +22,18 @@ my_lib.mpriscv.restype = ctypes.POINTER(ctypes.c_uint8)
 
 # Call the mpriscv function
 sel_img = 2
-t0 = ctypes.c_float(0.0)
-t1 = ctypes.c_float(0.0)
-t2 = ctypes.c_float(0.0)
-t3 = ctypes.c_float(0.0)
-t4 = ctypes.c_float(0.0)
-t5 = ctypes.c_float(0.0)
+t0 = ctypes.c_double(0.0)
+t1 = ctypes.c_double(0.0)
+t2 = ctypes.c_double(0.0)
+t3 = ctypes.c_double(0.0)
+t4 = ctypes.c_double(0.0)
+t5 = ctypes.c_double(0.0)
 result = my_lib.mpriscv(sel_img, ctypes.byref(t0), ctypes.byref(t1), ctypes.byref(t2), ctypes.byref(t3), ctypes.byref(t4), ctypes.byref(t5))
+print(t0.value)
+print(t1.value)
+print(t2.value)
+print(t3.value)
+print(t4.value)
 
 # Access the returned array
 # Convert the result to a numpy array

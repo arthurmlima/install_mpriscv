@@ -27,6 +27,7 @@
 #include "Images_array.h"
 #include <time.h>
 
+
 #define TILE_0_0 0x400000000
 #define TILE_0_1 0x1000000000
 #define TILE_0_2 0x1100000000
@@ -82,14 +83,15 @@ typedef struct
 	}ImageInitTransfer_struct;
 
 void prog_riscv(Vis_AxiStruct* p);
-void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, float *t_primeiro_ma, float *t_ultimo_ma);
-uint8_t* recv_pixel(ImageInitRecv_struct *p,float *t_primeiro_am, float *t_ultimo_am);
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, double *t_primeiro_ma, double *t_ultimo_ma);
+uint8_t* recv_pixel(ImageInitRecv_struct *p,double *t_primeiro_am, double *t_ultimo_am);
 
 uint8_t mlena1[240][240];
 uint8_t mlena2[240][240];
 uint8_t ml2[240*240];
+   struct timespec current_time;
 
-uint8_t* mpriscv(int sel_img, float *t0, float *t1, float *t2, float *t3,float *t4,float *t5) {
+uint8_t* mpriscv(int sel_img, double *t0, double *t1, double *t2, double *t3,double *t4,double *t5) {
   	
 	*t0= 1.73;
 	*t1= 1.73;
@@ -170,19 +172,29 @@ uint8_t* mpriscv(int sel_img, float *t0, float *t1, float *t2, float *t3,float *
       return recv_pixel(Receiv,t2,t3);
 }
 
-void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, float *t_primeiro_ma, float *t_ultimo_ma)
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, double *t_primeiro_ma, double *t_ultimo_ma)
 {
 	  for (volatile uint32_t i = 0; i < 240; i++)
 	  {
 		  for (volatile uint32_t j = 0; j < 240; j++)
 		  {
-			  if (i == 240 && j == 240)
+			  if (i == 239 && j == 239)
 			  {
-				  //*t_primeiro_ma = p->T_PRIMEIRO_MA;
+//
+//
+   // Get the current time with nanosecond precision
+   clock_gettime(CLOCK_REALTIME, &current_time);
+   // Extract the seconds and nanoseconds from the current time
+   long nanoseconds1 = current_time.tv_nsec;
+				  *t_ultimo_ma=nanoseconds1;
 			  }
 			  else if (i == 0 && j == 0)
-			  {
-				  //*t_ultimo_ma = p->T_ULTIMO_MA;
+			  {   
+
+				clock_gettime(CLOCK_REALTIME, &current_time);
+  				// Extract the seconds and nanoseconds from the current time
+   				long nanoseconds2 = current_time.tv_nsec;
+				*t_primeiro_ma = nanoseconds2;
 			  }
 			  // primeiro eu seto os valores
 			  p->PIXEL = conf[sel_img][j+240*i];
@@ -206,18 +218,28 @@ void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img
 	  }
 }
 
-uint8_t *recv_pixel(ImageInitRecv_struct *p, float *t_primeiro_am, float *t_ultimo_am)
+uint8_t *recv_pixel(ImageInitRecv_struct *p, double *t_primeiro_am, double *t_ultimo_am)
 {
 	  for (volatile uint32_t i = 0; i < 240; i++)
 	  {
 		  for (volatile uint32_t j = 0; j < 240; j++)
 		  {
-			  if (i == 240 && j == 240)
+			  if (i == 239 && j == 239)
 			  {
-				  //*t_primeiro_am = p->T_PRIMEIRO_MA;
+   // Get the current time with nanosecond precision
+   clock_gettime(CLOCK_REALTIME, &current_time);
+   // Extract the seconds and nanoseconds from the current time
+   long nanoseconds1 = current_time.tv_nsec;
+				 *t_ultimo_am =nanoseconds1;
+				  //;
 			  }
 			  else if (i == 0 && j == 0)
 			  {
+   // Get the current time with nanosecond precision
+   clock_gettime(CLOCK_REALTIME, &current_time);
+   // Extract the seconds and nanoseconds from the current time
+   long nanoseconds2 = current_time.tv_nsec;
+				 *t_primeiro_am =nanoseconds2;
 				  //*t_ultimo_am = p->T_ULTIMO_MA;
 			  }
 			  while (p->REQ == 0)

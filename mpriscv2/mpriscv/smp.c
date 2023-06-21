@@ -82,16 +82,27 @@ typedef struct
 	volatile uint32_t ACK;
 	}ImageInitTransfer_struct;
 
+uint64_t get_nanoseconds() {
+    struct timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &current_time);
+    return (uint64_t)current_time.tv_sec * 1000000000 + current_time.tv_nsec;
+}
+uint64_t get_microseconds() {
+    clock_t current_clock = clock();
+    return (uint64_t)current_clock * 1000000 / CLOCKS_PER_SEC;
+}
+
+
 void prog_riscv(Vis_AxiStruct* p);
-void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, double *t_primeiro_ma, double *t_ultimo_ma);
-uint8_t* recv_pixel(ImageInitRecv_struct *p,double *t_primeiro_am, double *t_ultimo_am);
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, uint64_t *t_primeiro_ma, uint64_t *t_ultimo_ma);
+uint8_t* recv_pixel(ImageInitRecv_struct *p,uint64_t *t_primeiro_am, uint64_t *t_ultimo_am);
 
 uint8_t mlena1[240][240];
 uint8_t mlena2[240][240];
 uint8_t ml2[240*240];
    struct timespec current_time;
 
-uint8_t* mpriscv(int sel_img, double *t0, double *t1, double *t2, double *t3,double *t4,double *t5) {
+uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t *t3,uint64_t *t4,uint64_t *t5) {
   	
 	unsigned 	page_addr;
 	unsigned	page_offset;
@@ -158,15 +169,16 @@ uint8_t* mpriscv(int sel_img, double *t0, double *t1, double *t2, double *t3,dou
 	tile08->RST=1;
 	close(fd);
 
+   // Extract the seconds and nanoseconds from the current time
+   *t0 = current_time.tv_nsec;
+
+	transfer_image(Transfer,conf,sel_img,t1,t2);
 
 
-	transfer_image(Transfer,conf,sel_img,t0,t1);
-
-
-      return recv_pixel(Receiv,t2,t3);
+      return recv_pixel(Receiv,t3,t4);
 }
 
-void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, double *t_primeiro_ma, double *t_ultimo_ma)
+void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img, uint64_t *t_primeiro_ma, uint64_t *t_ultimo_ma)
 {
 	  for (volatile uint32_t i = 0; i < 240; i++)
 	  {
@@ -174,21 +186,11 @@ void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img
 		  {
 			  if (i == 239 && j == 239)
 			  {
-//
-//
-   // Get the current time with nanosecond precision
-   clock_gettime(CLOCK_REALTIME, &current_time);
-   // Extract the seconds and nanoseconds from the current time
-   long nanoseconds1 = current_time.tv_nsec;
-				  *t_ultimo_ma=nanoseconds1;
+				*t_ultimo_ma= get_microseconds();
 			  }
 			  else if (i == 0 && j == 0)
 			  {   
-
-				clock_gettime(CLOCK_REALTIME, &current_time);
-  				// Extract the seconds and nanoseconds from the current time
-   				long nanoseconds2 = current_time.tv_nsec;
-				*t_primeiro_ma = nanoseconds2;
+				*t_primeiro_ma =  get_microseconds();
 			  }
 			  // primeiro eu seto os valores
 			  p->PIXEL = conf[sel_img][j+240*i];
@@ -210,29 +212,19 @@ void transfer_image(ImageInitTransfer_struct *p,uint8_t *conf[], uint8_t sel_img
 	  }
 }
 
-uint8_t *recv_pixel(ImageInitRecv_struct *p, double *t_primeiro_am, double *t_ultimo_am)
+uint8_t *recv_pixel(ImageInitRecv_struct *p, uint64_t *t_primeiro_am, uint64_t *t_ultimo_am)
 {
 	  for (volatile uint32_t i = 0; i < 240; i++)
 	  {
 		  for (volatile uint32_t j = 0; j < 240; j++)
 		  {
 			  if (i == 239 && j == 239)
-			  {
-   // Get the current time with nanosecond precision
-   clock_gettime(CLOCK_REALTIME, &current_time);
-   // Extract the seconds and nanoseconds from the current time
-   long nanoseconds1 = current_time.tv_nsec;
-				 *t_ultimo_am =nanoseconds1;
-				  //;
+			  {   				
+			  	*t_ultimo_am = get_microseconds();
 			  }
 			  else if (i == 0 && j == 0)
 			  {
-   // Get the current time with nanosecond precision
-   clock_gettime(CLOCK_REALTIME, &current_time);
-   // Extract the seconds and nanoseconds from the current time
-   long nanoseconds2 = current_time.tv_nsec;
-				 *t_primeiro_am =nanoseconds2;
-				  //*t_ultimo_am = p->T_ULTIMO_MA;
+			  	*t_primeiro_am = get_microseconds();
 			  }
 			  while (p->REQ == 0)
 				  ;

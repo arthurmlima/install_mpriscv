@@ -191,10 +191,10 @@ void main()
 
      reg_uart_clkdiv=868;
 
+
     core_init(); // se tu eh um tile periferico recebe, se for o caso do central envia/recebe
 
     back2arm();
-
 
 
     while(1);
@@ -265,13 +265,14 @@ void wait_perifericos(void)
 {
 	while((ENTRADA_INIT_PROG_FIM)!=0x1EF)
     {
-		LEDS=1;
+		LEDS=3;
         __asm("nop");
     }
     SAIDA_INIT_PROG_FIM=1;
 
 	while((ENTRADA_INIT_PROG_FIM)!=0x10)
     {
+        LEDS=1;
         __asm("nop");
     }
 	SAIDA_INIT_PROG_FIM=0;

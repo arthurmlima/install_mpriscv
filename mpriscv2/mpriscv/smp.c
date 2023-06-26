@@ -102,7 +102,8 @@ uint8_t mlena2[240][240];
 uint8_t ml2[240*240];
    struct timespec current_time;
 
-uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t *t3,uint64_t *t4,uint64_t *t5) {
+
+void program_mpriscv() {
   	
 	unsigned 	page_addr;
 	unsigned	page_offset;
@@ -117,8 +118,6 @@ uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t
 	Vis_AxiStruct *tile06 ;
 	Vis_AxiStruct *tile07 ;
 	Vis_AxiStruct *tile08 ;
-	ImageInitRecv_struct     *Receiv   ;
-	ImageInitTransfer_struct *Transfer ;
 
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
 
@@ -134,8 +133,7 @@ uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t
 	tile08 = (Vis_AxiStruct *)mmap(NULL,page_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,(TILE_2_2));
 
 
-	Transfer = (ImageInitTransfer_struct *)mmap(NULL,page_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,(0xA0000000));
-	Receiv = (ImageInitRecv_struct *)mmap(NULL,page_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,(0xA0001000));
+
 
 	prog_riscv(tile00);
 	prog_riscv(tile01);
@@ -168,8 +166,21 @@ uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t
 	tile07->RST=1;
 	tile08->RST=1;
 	close(fd);
+}
 
+uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t *t3,uint64_t *t4,uint64_t *t5) {
+	unsigned 	page_addr;
+	unsigned	page_offset;
+	unsigned 	page_size = sysconf(_SC_PAGESIZE);
+
+	ImageInitRecv_struct     *Receiv   ;
+	ImageInitTransfer_struct *Transfer ;
+
+    int fd = open("/dev/mem", O_RDWR | O_SYNC);
    // Extract the seconds and nanoseconds from the current time
+	Transfer = (ImageInitTransfer_struct *)mmap(NULL,page_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,(0xA0000000));
+	Receiv = (ImageInitRecv_struct *)mmap(NULL,page_size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,(0xA0001000));
+   	close(fd);
    *t0 = current_time.tv_nsec;
 
 	transfer_image(Transfer,conf,sel_img,t1,t2);
@@ -261,6 +272,5 @@ for(int i=0; i < sizeof(program)/sizeof(program[0]);i++)
    p->ADDR =0;
 }
 }
-
 
 

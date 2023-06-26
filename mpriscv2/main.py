@@ -6,6 +6,13 @@ from flask import Flask, Response
 # Load the shared library containing the mpriscv function
 my_lib = ctypes.CDLL("./mpriscv/mpriscv.so")
 
+# Define the function prototype
+program_mpriscv = my_lib.program_mpriscv
+program_mpriscv.restype = None  # Set the return type to None (void)
+
+
+
+
 # Define the argument types
 my_lib.mpriscv.argtypes = [
     ctypes.c_int,                       # sel_img
@@ -21,14 +28,17 @@ my_lib.mpriscv.argtypes = [
 my_lib.mpriscv.restype = ctypes.POINTER(ctypes.c_uint8)
 
 # Call the mpriscv function
-sel_img = 3
+sel_img = 11
 t0 = ctypes.c_uint64(0)
 t1 = ctypes.c_uint64(0)
 t2 = ctypes.c_uint64(0)
 t3 = ctypes.c_uint64(0)
 t4 = ctypes.c_uint64(0)
 t5 = ctypes.c_uint64(0)
-result = my_lib.mpriscv(sel_img, ctypes.byref(t0), ctypes.byref(t1), ctypes.byref(t2), ctypes.byref(t3), ctypes.byref(t4), ctypes.byref(t5))
+
+program_mpriscv()
+result = result = my_lib.mpriscv(sel_img, ctypes.byref(t0), ctypes.byref(t1), ctypes.byref(t2), ctypes.byref(t3), ctypes.byref(t4), ctypes.byref(t5))
+(sel_img, ctypes.byref(t0), ctypes.byref(t1), ctypes.byref(t2), ctypes.byref(t3), ctypes.byref(t4), ctypes.byref(t5))
 print("t1 - Tempo ate a transmissao do primeiro pixel para o ARM -> MPRISCV: {} us".format(t1.value))
 print("t2 - Tempo ate a transmissao do ultimo   pixel para o ARM -> MPRISCV: {} us".format(t2.value))
 print("t3 - Tempo ate a transmissao do primeiro pixel para o MPRISCV -> ARM: {} us".format(t3.value))
@@ -47,6 +57,26 @@ image = np.reshape(image_data, (240, 240))
 
 # Create a Flask app
 app = Flask(__name__)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Route for displaying the image
 @app.route("/")

@@ -36,7 +36,7 @@ Go to mpriscv directory
 
 Compile as shared libraries the program in C/C++ which loads the mpriscv firmware and issues images transactions between the Arm-Host and mpriscv 
     
-    $ gcc -shared mpriscv.so -o smp.c
+    $ gcc -fPIC -shared smp.c -o mpriscv.so
 
 Pun python script 
 

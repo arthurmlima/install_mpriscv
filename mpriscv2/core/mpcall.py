@@ -5,7 +5,7 @@ import cv2
 from flask import Flask, Response
 
 
-def mpriscv(sel_img, t0, t1, t2, t3, t4, t5):
+def mpriscv(sel_img):
     my_lib = ctypes.CDLL("/home/ubuntu/mpriscv-util-cana/mpriscv2/mpriscv/mpriscv.so")
     my_lib.mpriscv.argtypes = [
         ctypes.c_int,                       # sel_img
@@ -28,4 +28,4 @@ def mpriscv(sel_img, t0, t1, t2, t3, t4, t5):
     array = ctypes.cast(result, ctypes.POINTER(ctypes.c_uint8 * 240 * 240)).contents
     image_data = np.array(array, dtype=np.uint8)
     image_data = np.reshape(image_data, (240, 240))
-    return cv2.cvtColor(image_data, cv2.COLOR_GRAY2RGB)
+    return cv2.cvtColor(image_data, cv2.COLOR_GRAY2RGB), t0, t1, t2, t3, t4, t5

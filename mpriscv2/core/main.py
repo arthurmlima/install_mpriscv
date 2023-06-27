@@ -13,8 +13,6 @@ import mpcall
 from natsort import natsorted
 #from demeter import sptools
 
-
-
 # ****************    SET PATHS      *******************************************************
 
 load_path = '/home/ubuntu/mpriscv-util-cana/mpriscv2/core/Input_Images/'
@@ -22,7 +20,7 @@ save_path = '/home/ubuntu/mpriscv-util-cana/mpriscv2/core/Output_Images/'
 sinogram_path = '/home/ubuntu/mpriscv-util-cana/mpriscv2/core/Sinogram'
 
 # ****************    SET IMAGE NAMES      *************************************************
-img_names = glob(os.path.join(load_path, 'conf_*.png'))  # article for discipline
+img_names = glob(os.path.join(load_path, '../../images/conf_*.hpp'))  # article for discipline
 
 
 # *************   PUBLIC VARIABLES  ***************************************************
@@ -32,6 +30,15 @@ list_angles = []
 time_process_imgs = []
 print_on_terminal = False
 
+iname = []
+t0 = []
+t1 = []
+t2 = []
+t3 = []
+t4 = []
+t5 = []
+tc = []
+
 # *************   HEURISTIC BASIC SETUP  **********************************************
 algorithm = "RADON"    # Pick up one of heuristic available [PROJECTION, MIDDLE, HOUGH, PCA, RADON]
 scan_resolution = 1    # Factor for angle step image rotation in degrees [1/scan_resolution]°
@@ -39,9 +46,26 @@ image_rezise    = 1    # image downsize factor [original/image_rezise]
 ig_index = 0            # image index
 # *************   START PROCESSING ***********************************************
 print("================  START PROCESSING  ================")
-for fn in range(1, 10):
+for fn in img_names:
+    base = os.path.basename(fn)
+    file_name = (os.path.splitext(base)[0])
+    st0 = 0
+    st1 = 0
+    st2 = 0
+    st3 = 0
+    st4 = 0
+    st5 = 0
+    stc = 0
     start_time = time.time()
-    img = mpcall.mpriscv(ig_index, 0, 0, 0, 0, 0, 0) 
+    img ,st0, st1, st2, st3, st4, st5  = mpcall.mpriscv(ig_index)
+    iname.append(file_name)
+    t0.append(str(st0.value))    
+    t1.append(str(st1.value))
+    t2.append(str(st2.value))
+    t3.append(str(st3.value))
+    t4.append(str(st4.value))
+    t5.append(str(st5.value))
+
     ig_index += 1
     [height, width, layer] = img.shape
 
@@ -130,7 +154,28 @@ print("================  FINISH PROCESSING  ================")
 
 # *************   END OF MAIN APPLICATION  ***********************************************************
 # ****************************************************************************************************
+local_results = list(zip(iname, t0, t1, t2, t3,t4, time_process_imgs))
+np.savetxt('final_results.csv',local_results,fmt='%s',delimiter=',')
 
+import csv
+
+# Specify the filename for the CSV file
+filename = "data.csv"
+
+# Open the CSV file in write mode
+with open(filename, mode="w", newline="") as file:
+    writer = csv.writer(file)
+
+    # Write the header row
+    header = ["Image Name", "T0", "T1", "T2", "T3", "T4","Tappl"]
+    writer.writerow(header)
+
+    # Write the data rows
+    for i in range(len(iname)):
+        row = [iname[i], t0[i], t1[i], t2[i], t3[i],t4[i], time_process_imgs[i]]
+        writer.writerow(row)
+
+print("Data written to", filename)
 
 # ----------------------------------------------#
 #     (1)   PRINT ALL RESULTS ON TERMINAL       #

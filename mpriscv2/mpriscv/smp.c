@@ -174,7 +174,7 @@ uint8_t* mpriscv(int sel_img, uint64_t *t0, uint64_t *t1, uint64_t *t2, uint64_t
 
 
 
-   *t0 = current_time.tv_nsec;
+   *t0 = get_microseconds();
 
 	transfer_image(Transfer,conf,sel_img,t1,t2);
 
